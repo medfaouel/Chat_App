@@ -1,0 +1,390 @@
+@startuml
+set namespaceSeparator ::
+
+abstract class "chatter::helpers.dart::Helpers" {
+  {static} +Random random
+  {static} +String randomPictureUrl()
+  {static} +DateTime randomDate()
+  {static} +String getChannelName()
+  {static} +String? getChannelImage()
+}
+
+"chatter::helpers.dart::Helpers" o-- "dart::math::Random"
+
+class "chatter::main.dart::MyApp" {
+  +StreamChatClient client
+  +Widget build()
+}
+
+"chatter::main.dart::MyApp" o-- "stream_chat::src::client::client.dart::StreamChatClient"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::main.dart::MyApp"
+
+class "chatter::models::demo_users.dart::DemoUser" {
+  +String id
+  +String name
+  +String image
+}
+
+class "chatter::models::story_data.dart::StoryData" {
+  +String name
+  +String url
+}
+
+class "chatter::pages::calls_page.dart::CallsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::calls_page.dart::CallsPage"
+
+class "chatter::pages::contacts_page.dart::ContactsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::contacts_page.dart::ContactsPage"
+
+class "chatter::pages::contacts_page.dart::_ContactTile" {
+  +User user
+  +Future<void> createChannel()
+  +Widget build()
+}
+
+"chatter::pages::contacts_page.dart::_ContactTile" o-- "stream_chat::src::core::models::user.dart::User"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::contacts_page.dart::_ContactTile"
+
+class "chatter::pages::messages_page.dart::MessagesPage" {
+  +_MessagesPageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::pages::messages_page.dart::MessagesPage"
+
+class "chatter::pages::messages_page.dart::_MessagesPageState" {
+  +ChannelListController channelListController
+  +Widget build()
+}
+
+"chatter::pages::messages_page.dart::_MessagesPageState" o-- "stream_chat_flutter_core::src::channel_list_core.dart::ChannelListController"
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::pages::messages_page.dart::_MessagesPageState"
+
+class "chatter::pages::messages_page.dart::_MessageTile" {
+  +Channel channel
+  +Widget build()
+  -Widget _buildLastMessage()
+  -Widget _buildLastMessageAt()
+}
+
+"chatter::pages::messages_page.dart::_MessageTile" o-- "stream_chat::src::client::channel.dart::Channel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::messages_page.dart::_MessageTile"
+
+class "chatter::pages::messages_page.dart::_Stories" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::messages_page.dart::_Stories"
+
+class "chatter::pages::messages_page.dart::_StoryCard" {
+  +StoryData storyData
+  +Widget build()
+}
+
+"chatter::pages::messages_page.dart::_StoryCard" o-- "chatter::models::story_data.dart::StoryData"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::messages_page.dart::_StoryCard"
+
+class "chatter::pages::notifications_page.dart::NotificationsPage" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::pages::notifications_page.dart::NotificationsPage"
+
+class "chatter::screens::chat_screen.dart::ChatScreen" {
+  {static} +Route<dynamic> routeWithChannel()
+  +_ChatScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::screens::chat_screen.dart::ChatScreen"
+
+class "chatter::screens::chat_screen.dart::_ChatScreenState" {
+  +StreamSubscription<int> unreadCountSubscription
+  +void initState()
+  -Future<void> _unreadCountHandler()
+  +void dispose()
+  +Widget build()
+}
+
+"chatter::screens::chat_screen.dart::_ChatScreenState" o-- "dart::async::StreamSubscription<int>"
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::screens::chat_screen.dart::_ChatScreenState"
+
+class "chatter::screens::chat_screen.dart::_MessageList" {
+  +List<Message> messages
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::chat_screen.dart::_MessageList"
+
+class "chatter::screens::chat_screen.dart::_MessageTile" {
+  +Message message
+  {static} -double _borderRadius
+  +Widget build()
+}
+
+"chatter::screens::chat_screen.dart::_MessageTile" o-- "stream_chat::src::core::models::message.dart::Message"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::chat_screen.dart::_MessageTile"
+
+class "chatter::screens::chat_screen.dart::_MessageOwnTile" {
+  +Message message
+  {static} -double _borderRadius
+  +Widget build()
+}
+
+"chatter::screens::chat_screen.dart::_MessageOwnTile" o-- "stream_chat::src::core::models::message.dart::Message"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::chat_screen.dart::_MessageOwnTile"
+
+class "chatter::screens::chat_screen.dart::_DateLable" {
+  +DateTime dateTime
+  +__DateLableState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::screens::chat_screen.dart::_DateLable"
+
+class "chatter::screens::chat_screen.dart::__DateLableState" {
+  +String dayInfo
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::screens::chat_screen.dart::__DateLableState"
+
+class "chatter::screens::chat_screen.dart::_AppBarTitle" {
+  +Widget build()
+  -Widget _buildConnectedTitleState()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::chat_screen.dart::_AppBarTitle"
+
+class "chatter::screens::chat_screen.dart::TypingIndicator" {
+  +Widget? alternativeWidget
+  +Widget build()
+}
+
+"chatter::screens::chat_screen.dart::TypingIndicator" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::chat_screen.dart::TypingIndicator"
+
+class "chatter::screens::chat_screen.dart::ConnectionStatusBuilder" {
+  +Stream<ConnectionStatus>? connectionStatusStream
+  +Widget Function(BuildContext, Object?)? errorBuilder
+  +Widget Function(BuildContext)? loadingBuilder
+  +Widget Function(BuildContext, ConnectionStatus) statusBuilder
+  +Widget build()
+}
+
+"chatter::screens::chat_screen.dart::ConnectionStatusBuilder" o-- "dart::async::Stream<ConnectionStatus>"
+"chatter::screens::chat_screen.dart::ConnectionStatusBuilder" o-- "null::Widget Function(BuildContext, Object)"
+"chatter::screens::chat_screen.dart::ConnectionStatusBuilder" o-- "flutter::src::widgets::framework.dart::Widget Function(BuildContext)"
+"chatter::screens::chat_screen.dart::ConnectionStatusBuilder" o-- "null::Widget Function(BuildContext, ConnectionStatus)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::chat_screen.dart::ConnectionStatusBuilder"
+
+class "chatter::screens::chat_screen.dart::_ActionBar" {
+  +__ActionBarState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::screens::chat_screen.dart::_ActionBar"
+
+class "chatter::screens::chat_screen.dart::__ActionBarState" {
+  +TextEditingController controller
+  -Future<void> _sendMessage()
+  +void dispose()
+  +Widget build()
+}
+
+"chatter::screens::chat_screen.dart::__ActionBarState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::screens::chat_screen.dart::__ActionBarState"
+
+class "chatter::screens::home_screen.dart::HomeScreen" {
+  +ValueNotifier<int> pageIndex
+  +ValueNotifier<String> title
+  +List<Widget> pages
+  +List<String> pageTitles
+  -void _onNavigationItemSelected()
+  +Widget build()
+}
+
+"chatter::screens::home_screen.dart::HomeScreen" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<int>"
+"chatter::screens::home_screen.dart::HomeScreen" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<String>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::home_screen.dart::HomeScreen"
+
+class "chatter::screens::home_screen.dart::_BottomNavigationBar" {
+  +void Function(int) onItemSelected
+  +__BottomNavigationBarState createState()
+}
+
+"chatter::screens::home_screen.dart::_BottomNavigationBar" o-- "flutter::src::foundation::basic_types.dart::void Function(int)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::screens::home_screen.dart::_BottomNavigationBar"
+
+class "chatter::screens::home_screen.dart::__BottomNavigationBarState" {
+  +int selectedIndex
+  +void handleItemSelected()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::screens::home_screen.dart::__BottomNavigationBarState"
+
+class "chatter::screens::home_screen.dart::_NavigationBarItem" {
+  +int index
+  +String lable
+  +IconData icon
+  +bool isSelected
+  +void Function(int) onTap
+  +Widget build()
+}
+
+"chatter::screens::home_screen.dart::_NavigationBarItem" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"chatter::screens::home_screen.dart::_NavigationBarItem" o-- "flutter::src::foundation::basic_types.dart::void Function(int)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::home_screen.dart::_NavigationBarItem"
+
+class "chatter::screens::profile_screen.dart::ProfileScreen" {
+  {static} +Route<dynamic> route
+  +Widget build()
+}
+
+"chatter::screens::profile_screen.dart::ProfileScreen" o-- "flutter::src::widgets::navigator.dart::Route<dynamic>"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::profile_screen.dart::ProfileScreen"
+
+class "chatter::screens::profile_screen.dart::_SignOutButton" {
+  +__SignOutButtonState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::screens::profile_screen.dart::_SignOutButton"
+
+class "chatter::screens::profile_screen.dart::__SignOutButtonState" {
+  -bool _loading
+  -Future<void> _signOut()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::screens::profile_screen.dart::__SignOutButtonState"
+
+class "chatter::screens::select_user_screen.dart::SelectUserScreen" {
+  {static} +Route<dynamic> route
+  +_SelectUserScreenState createState()
+}
+
+"chatter::screens::select_user_screen.dart::SelectUserScreen" o-- "flutter::src::widgets::navigator.dart::Route<dynamic>"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "chatter::screens::select_user_screen.dart::SelectUserScreen"
+
+class "chatter::screens::select_user_screen.dart::_SelectUserScreenState" {
+  -bool _loading
+  +Future<void> onUserSelected()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "chatter::screens::select_user_screen.dart::_SelectUserScreenState"
+
+class "chatter::screens::select_user_screen.dart::SelectUserButton" {
+  +DemoUser user
+  +dynamic Function(DemoUser) onPressed
+  +Widget build()
+}
+
+"chatter::screens::select_user_screen.dart::SelectUserButton" o-- "chatter::models::demo_users.dart::DemoUser"
+"chatter::screens::select_user_screen.dart::SelectUserButton" o-- "null::dynamic Function(DemoUser)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::screens::select_user_screen.dart::SelectUserButton"
+
+abstract class "chatter::theme.dart::AppColors" {
+  {static} +Color secondary
+  {static} +Color accent
+  {static} +Color textDark
+  {static} +Color textLigth
+  {static} +Color textFaded
+  {static} +Color iconLight
+  {static} +Color iconDark
+  {static} +Color textHighlight
+  {static} +Color cardLight
+  {static} +Color cardDark
+}
+
+"chatter::theme.dart::AppColors" o-- "dart::ui::Color"
+
+abstract class "chatter::theme.dart::_LightColors" {
+  {static} +Color background
+  {static} +Color card
+}
+
+"chatter::theme.dart::_LightColors" o-- "dart::ui::Color"
+
+abstract class "chatter::theme.dart::_DarkColors" {
+  {static} +Color background
+  {static} +Color card
+}
+
+"chatter::theme.dart::_DarkColors" o-- "dart::ui::Color"
+
+abstract class "chatter::theme.dart::AppTheme" {
+  {static} +Color accentColor
+  {static} +VisualDensity visualDensity
+  {static} +ThemeData light()
+  {static} +ThemeData dark()
+}
+
+"chatter::theme.dart::AppTheme" o-- "dart::ui::Color"
+"chatter::theme.dart::AppTheme" o-- "flutter::src::material::theme_data.dart::VisualDensity"
+
+class "chatter::widgets::avatar.dart::Avatar" {
+  +double radius
+  +String? url
+  +void Function()? onTap
+  +Widget build()
+  -Widget _avatar()
+}
+
+"chatter::widgets::avatar.dart::Avatar" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::widgets::avatar.dart::Avatar"
+
+class "chatter::widgets::display_error_message.dart::DisplayErrorMessage" {
+  +Object? error
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::widgets::display_error_message.dart::DisplayErrorMessage"
+
+class "chatter::widgets::glowing_action_button.dart::GlowingActionButton" {
+  +Color color
+  +IconData icon
+  +double size
+  +void Function() onPressed
+  +Widget build()
+}
+
+"chatter::widgets::glowing_action_button.dart::GlowingActionButton" o-- "dart::ui::Color"
+"chatter::widgets::glowing_action_button.dart::GlowingActionButton" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"chatter::widgets::glowing_action_button.dart::GlowingActionButton" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::widgets::glowing_action_button.dart::GlowingActionButton"
+
+class "chatter::widgets::icon_buttons.dart::IconBackground" {
+  +IconData icon
+  +void Function() onTap
+  +Widget build()
+}
+
+"chatter::widgets::icon_buttons.dart::IconBackground" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"chatter::widgets::icon_buttons.dart::IconBackground" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::widgets::icon_buttons.dart::IconBackground"
+
+class "chatter::widgets::icon_buttons.dart::IconBorder" {
+  +IconData icon
+  +void Function() onTap
+  +Widget build()
+}
+
+"chatter::widgets::icon_buttons.dart::IconBorder" o-- "flutter::src::widgets::icon_data.dart::IconData"
+"chatter::widgets::icon_buttons.dart::IconBorder" o-- "dart::ui::void Function()"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::widgets::icon_buttons.dart::IconBorder"
+
+class "chatter::widgets::unread_indicator.dart::UnreadIndicator" {
+  +Channel channel
+  +Widget build()
+}
+
+"chatter::widgets::unread_indicator.dart::UnreadIndicator" o-- "stream_chat::src::client::channel.dart::Channel"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "chatter::widgets::unread_indicator.dart::UnreadIndicator"
+
+
+@enduml
